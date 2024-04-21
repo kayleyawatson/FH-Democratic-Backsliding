@@ -10,11 +10,18 @@ To use this project with R, follow these steps:
 
 1. **Install R**: If you haven't already, download and install R from the [official R website](https://cran.r-project.org/).
 
-2. **Install Required Packages**: This project relies on several R packages. To install them, run the following commands in your R console:
+2. **Install and Load Required Packages **: This project relies on several R packages. To install them, run the following commands in your R console:
 
    ```R
+   install.packages("tidyverse")
+   install.packages("rnaturalearth")
    install.packages("ggplot2")
    install.packages("dplyr")
+
+   library(tidyverse)
+   library(rnaturalearth)
+   library(ggplot2)
+   library(dplyr)
 
 To view this project using HTML, follow these steps:
 
