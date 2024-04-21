@@ -23,9 +23,17 @@ To use this project with R, follow these steps:
    library(ggplot2)
    library(dplyr)
 
-To view this project using HTML, follow these steps:
+3. **Load the CSV file into RStudio and store it as "FH_data"
 
-1. Select the HTML file from the repository and download a copy to your device.
+   ```R
+   FH_data <- file.choose()
+
+## Viewing
+
+Alternatively, to view this project using HTML, follow these steps:
+
+1. Select the HTML file from the repository
+2. Download a copy and open a copy on your device.
 
 ## Data Sources
 
