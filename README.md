@@ -12,7 +12,7 @@ To use this project with R, follow these steps:
 
 2. **Download RStudio**: RStudio is the interface in which R will be coded. If you do not have RStudio, the program will not run correctly (https://posit.co/products/open-source/rstudio/)
 
-3. **Install and Load Required Packages**: This project relies on several R packages. To install them, run the following commands in your R console:
+3. **Install and Load Required Packages**: This project relies on several R packages. To install them, run the following commands in RStudio:
 
    ```R
    install.packages("tidyverse")
