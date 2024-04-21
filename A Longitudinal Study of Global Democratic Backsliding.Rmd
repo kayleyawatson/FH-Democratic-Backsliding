@@ -39,7 +39,7 @@ knitr::include_graphics("https://github.com/kayleyawatson/FH-Democratic-Backslid
 
 install.packages("tidyverse")
 install.packages("rnaturalearth")
-install.packages("naturalearthdata")
+install.packages("rnaturalearthdata")
 install.packages("ggplot2")
 install.packages("dplyr")
 install.packages("knitr")
@@ -47,7 +47,7 @@ install.packages("knitr")
 
 library(tidyverse)
 library(rnaturalearth)
-library(naturalearthdata)
+library(rnaturalearthdata)
 library(ggplot2)
 library(dplyr)
 library(knitr)
