@@ -2,7 +2,6 @@
 
 A brief description of what the project does and its purpose.
 
-## installation
 
 ## Usage
 
@@ -15,3 +14,7 @@ To use this project with R, follow these steps:
    ```R
    install.packages("ggplot2")
    install.packages("dplyr")
+
+To view this project using HTML, follow these steps:
+
+1. Select the HTML file from the repository and download a copy to your device. 
