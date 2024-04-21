@@ -37,15 +37,18 @@ knitr::include_graphics("/Users/kayleywatson/Desktop/Stat 201/Global_Democracy_S
 
 ```{r}
 
-#install.packages("tidyverse")
-#install.packages("rnaturalearth")
-#install.packages("ggplot2")
-#install.packages("dplyr")
+install.packages("tidyverse")
+install.packages("rnaturalearth")
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("knitr")
+#use command+shift+c to comment out install.packages command when finished installing
 
 library(tidyverse)
 library(rnaturalearth)
 library(ggplot2)
 library(dplyr)
+library(knitr)
 
 ```
 
