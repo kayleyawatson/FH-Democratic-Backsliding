@@ -23,7 +23,7 @@ To use this project with R, follow these steps:
    library(ggplot2)
    library(dplyr)
 
-3. **Load the CSV file***: To use the code, run the following code in RStudio and choose "(Edited)Aggregate_Category_and_Subcategory_Scores_FIW_2006-2023.csv" from the repository to add the file to your global environment as "FH_data" 
+3. **Load the CSV file**: To use the code, run the following code in RStudio and choose "(Edited)Aggregate_Category_and_Subcategory_Scores_FIW_2006-2023.csv" from the repository to add the file to your global environment as "FH_data" 
 
    ```R
    FH_data <- file.choose()
