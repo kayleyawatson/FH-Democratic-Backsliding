@@ -28,14 +28,6 @@ To view this project using HTML, follow these steps:
 1. Select the HTML file from the repository and download a copy to your device.
 
 ## Data Sources
-The primary sources for this project include:
-
-Freedom House: Provides annual democracy scores for countries worldwide.
-
-World Bank: Offers supplementary socio-economic indicators for contextual analysis.
-
-
-Other sources are as follows:
 
 “About Us.” Freedom House, freedomhouse.org/about-us. Accessed 18 Dec. 2023.
 
