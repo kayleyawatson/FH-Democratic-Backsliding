@@ -43,7 +43,9 @@ install.packages("rnaturalearthdata")
 install.packages("ggplot2")
 install.packages("dplyr")
 install.packages("knitr")
-#use command+shift+c to comment out install.packages command when finished installing
+
+#Ctrl + Shift + C (on Windows/Linux) or Command + Shift + C (on macOS) to comment out
+install.packages when finished installing.
 
 library(tidyverse)
 library(rnaturalearth)
