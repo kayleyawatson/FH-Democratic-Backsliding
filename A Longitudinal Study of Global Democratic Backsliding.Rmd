@@ -28,7 +28,7 @@ Using data from the “Aggregate Category and Subcategory Scores, 2003 - 2023”
 The graphic animates changes in total democracy score out of 100 (100 being high and 0 being low) of the different countries in the world from 2006 to 2023. 
 
 ```{r}
-knitr::include_graphics("/Users/kayleywatson/Desktop/Stat 201/Global_Democracy_Spectral.gif")
+knitr::include_graphics("/Users/kayleywatson/Desktop/Stat 201/Global_Democracy_Spectral_Graphic.gif")
 ```
 
 # Methods
