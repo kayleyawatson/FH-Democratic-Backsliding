@@ -58,7 +58,7 @@ library(knitr)
 The data set was downloaded from Freedom House and exported to a .csv file. The data from years 2003 through 2005 were excluded because they were recorded differently and stored on a separate spreadsheet tab. The data from 2006 to 2023 is more consistent than the 2003-2005 data set in how it is recorded. 2006-2023 would not require merging data tables that had swapped x and y axes for the same information/slightly different information. The data was roughly labeled in columns, with a few letters abbreviating different measures of democracy. In order to make sense of the data, the titles of the columns were changed so they reflected the information labels associated with them. The “key” with abbreviations was included as a separate tab on the downloadable Excel spreadsheet file. Extraneous columns that were labeled x, x.1, x,2...etc were also deleted. The values in all the rows for these columns were “N/A” and were not relevant to the study. 
 
 ```{r}
-FH_data <- file.choose()
+FH_data <- read.csv(file.choose())
 
 names(FH_data)[1] <- "Country" 
 names(FH_data)[4] <- "Year" 
