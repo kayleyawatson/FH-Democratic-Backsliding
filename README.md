@@ -1,4 +1,4 @@
-# Project Title
+# A Longitudinal Study of Global Democratic Backsliding
 
 A brief description of what the project does and its purpose.
 
