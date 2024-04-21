@@ -33,7 +33,7 @@ To use this project with R, follow these steps:
 Alternatively, to view this project using HTML, follow these steps:
 
 1. Select the HTML file from the repository
-2. Download a copy and open a copy on your device.
+2. Download and open a copy on your device.
 
 ## Data Sources
 
