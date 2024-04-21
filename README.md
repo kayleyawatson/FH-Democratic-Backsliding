@@ -31,7 +31,9 @@ To view this project using HTML, follow these steps:
 The primary sources for this project include:
 
 Freedom House: Provides annual democracy scores for countries worldwide.
+
 World Bank: Offers supplementary socio-economic indicators for contextual analysis.
+
 
 Other sources are as follows:
 
