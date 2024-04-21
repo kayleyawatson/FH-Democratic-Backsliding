@@ -10,7 +10,9 @@ To use this project with R, follow these steps:
 
 1. **Install R**: If you haven't already, download and install R from the [official R website](https://cran.r-project.org/).
 
-2. **Install and Load Required Packages**: This project relies on several R packages. To install them, run the following commands in your R console:
+2. **Download RStudio**: RStudio is the interface in which R will be coded. If you do not have RStudio, the program will not run correctly (https://posit.co/products/open-source/rstudio/)
+
+3. **Install and Load Required Packages**: This project relies on several R packages. To install them, run the following commands in your R console:
 
    ```R
    install.packages("tidyverse")
@@ -23,7 +25,7 @@ To use this project with R, follow these steps:
    library(ggplot2)
    library(dplyr)
 
-3. **Load the CSV file**: To use the code, run the following code in RStudio and choose "(Edited)Aggregate_Category_and_Subcategory_Scores_FIW_2006-2023.csv" from the repository to add the file to your global environment as "FH_data" 
+5. **Load the CSV file**: To use the code, run the following code in RStudio and choose "(Edited)Aggregate_Category_and_Subcategory_Scores_FIW_2006-2023.csv" from the repository to add the file to your global environment as "FH_data" 
 
    ```R
    FH_data <- file.choose()
