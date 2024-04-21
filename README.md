@@ -17,22 +17,23 @@ To use this project with R, follow these steps:
    ```R
    install.packages("tidyverse")
    install.packages("rnaturalearth")
+   install.packages("rnaturalearthdata")
    install.packages("ggplot2")
    install.packages("dplyr")
    install.packages("knitr")
 
    library(tidyverse)
    library(rnaturalearth)
+   library(rnaturalearthdata)
    library(ggplot2)
    library(dplyr)
    library(knitr)
 
-5. **Load the CSV file**: To use the code, run the following code in RStudio and choose "(Edited)Aggregate_Category_and_Subcategory_Scores_FIW_2006-2023.csv" from the repository to add the file to your global environment as "FH_data" 
+   #Ctrl + Shift + C (on Windows/Linux) or Command + Shift + C (on macOS) to comment out
+   install.packages when finished installing.
 
-   ```R
-   FH_data <- file.choose()
+5. **Load the CSV and gif files**: This code is formatted to go out and grab the files from the internet. Ensure your machine is connected to the internet and then run all chunks.
 
-6. **Change the file path of the keystone graphic**: Download the Gif and go  to line 31 and paste in your local filepath for the 
 
 ## Viewing
 
