@@ -39,6 +39,7 @@ knitr::include_graphics("/Users/kayleywatson/Desktop/Stat 201/Global_Democracy_S
 
 install.packages("tidyverse")
 install.packages("rnaturalearth")
+install.packages("naturalearthdata")
 install.packages("ggplot2")
 install.packages("dplyr")
 install.packages("knitr")
@@ -46,6 +47,7 @@ install.packages("knitr")
 
 library(tidyverse)
 library(rnaturalearth)
+library(naturalearthdata)
 library(ggplot2)
 library(dplyr)
 library(knitr)
