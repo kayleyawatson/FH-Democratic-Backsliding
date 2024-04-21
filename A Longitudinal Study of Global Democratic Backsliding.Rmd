@@ -1,0 +1,545 @@
+---
+title: "A Longitudinal Study of Global Democratic Backsliding"
+output: html_document
+date: "12-07-2023"
+---
+##### By: Lia Smith and Kayley Watson
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Introduction
+
+Freedom House is a nonprofit organization, founded in 1941, with the goal of provoking action against the rise of facism to motivate people in the fight against Nazi Germany (About Us). Since then, the organization has continued advocating for the support and defense of democracy, currently compiling data regarding “threats to democracy and freedom” from more than 200 different territories and countries (Our History). The “Freedom in the World'' report contains data from 15 territories and 195 countries. 
+
+The data is gathered from a variety of different sources, including but not limited to governments, non-governmental organizations, on the ground research, and local contacts. Conclusions reached are double-checked and scrutinized by expert advisers, with final rankings reflecting a consensus between Freedom House employees, advisers, and analysts. The report focuses on  “the electoral process, political pluralism and participation, the functioning of the government, freedom of expression and of belief, associational and organizational rights, the rule of law, and personal autonomy and individual rights” (Freedom in the World).
+
+Using data from the “Aggregate Category and Subcategory Scores, 2003 - 2023”, we made a keystone graphic to visually represent the overall shifts in democracy scores for each country over a period of 18 years, spanning from 2006 to 2023. We also further analyzed the shifts in world democracy averages and regional scores through additional graphs and statistics. 
+
+# Research Questions
+
+1) Is our world as a whole becoming less democratic? 
+2) Is there a specific continent/region with a higher rate of democratic backsliding? 
+3) Are some countries becoming more democratic? Some less? Any that stand out? 
+
+
+# Keystone Graphic
+
+The graphic animates changes in total democracy score out of 100 (100 being high and 0 being low) of the different countries in the world from 2006 to 2023. 
+
+```{r}
+knitr::include_graphics("/Users/kayleywatson/Desktop/Stat 201/Global_Democracy_Spectral.gif")
+```
+
+# Methods
+
+### Packages and Libraries
+
+```{r}
+
+#install.packages("tidyverse")
+#install.packages("rnaturalearth")
+#install.packages("ggplot2")
+#install.packages("dplyr")
+
+library(tidyverse)
+library(rnaturalearth)
+library(ggplot2)
+library(dplyr)
+
+```
+
+
+### Upload and Clean Freedom House Data
+
+The data set was downloaded from Freedom House and exported to a .csv file. The data from years 2003 through 2005 were excluded because they were recorded differently and stored on a separate spreadsheet tab. The data from 2006 to 2023 is more consistent than the 2003-2005 data set in how it is recorded. 2006-2023 would not require merging data tables that had swapped x and y axes for the same information/slightly different information. The data was roughly labeled in columns, with a few letters abbreviating different measures of democracy. In order to make sense of the data, the titles of the columns were changed so they reflected the information labels associated with them. The “key” with abbreviations was included as a separate tab on the downloadable Excel spreadsheet file. Extraneous columns that were labeled x, x.1, x,2...etc were also deleted. The values in all the rows for these columns were “N/A” and were not relevant to the study. 
+
+```{r}
+FH_data <- read.csv('/Users/kayleywatson/Desktop/Stat 201/(Edited)Aggregate_Category_and_Subcategory_Scores_FIW_2006-2023.csv')
+
+names(FH_data)[1] <- "Country" 
+names(FH_data)[4] <- "Year" 
+FH_data_modified <- FH_data
+FH_data_modified <- subset(FH_data_modified, select = -Region)
+FH_data_modified <- subset(FH_data_modified, select = -X)
+FH_data_modified <- subset(FH_data_modified, select = -X.1)
+FH_data_modified <- subset(FH_data_modified, select = -X.2)
+FH_data_modified <- subset(FH_data_modified, select = -X.3)
+FH_data_modified <- subset(FH_data_modified, select = -X.4)
+FH_data_modified <- subset(FH_data_modified, select = -X.5)
+FH_data_modified <- subset(FH_data_modified, select = -X.6)
+FH_data_modified <- subset(FH_data_modified, select = -X.7)
+FH_data_modified <- subset(FH_data_modified, select = -X.8)
+FH_data_modified <- subset(FH_data_modified, select = -X.9)
+FH_data_modified <- subset(FH_data_modified, select = -X.10)
+FH_data_modified <- subset(FH_data_modified, select = -X.11)
+FH_data_modified <- subset(FH_data_modified, select = -X.12)
+FH_data_modified <- subset(FH_data_modified, select = -X.13)
+FH_data_modified <- subset(FH_data_modified, select = -X.14)
+FH_data_modified <- subset(FH_data_modified, select = -x)
+FH_data_modified <- subset(FH_data_modified, select = -Add.A)
+FH_data_modified <- subset(FH_data_modified, select = -Add.Q)
+
+names(FH_data_modified)[4] <- "Political Rights Rating" 
+names(FH_data_modified)[5] <- "Civil Liberties" 
+names(FH_data_modified)[6] <- "Electoral Process"
+names(FH_data_modified)[7] <- "Political Pluralism and Participation"
+names(FH_data_modified)[8] <- "Govt Function"
+names(FH_data_modified)[10] <- "Freedom of Expression and Belief"
+names(FH_data_modified)[11] <- "Assoc and Org Rights"
+names(FH_data_modified)[12] <- "Rule of Law"
+names(FH_data_modified)[13] <- "Autonomy and Indv Rights"
+
+```
+
+
+### Rename Countries for Consistency
+
+When creating the map of the world, install.packages was used to add a new data set, rnaturalearthdata, which included data in the form of polygon objects to map out the world. This map had the countries listed and generated the shapes for all the countries. The names of each country/territory were different between the data set rnaturalearth when compared to the data set we had with the democracy values/totals. The year 2023 was isolated to use as a test case. The mutate function was used to change all the country names from 2006 through 2023 to be consistent. Some countries had “the,” extra punctuation, or spellings in different languages. 
+
+```{r}
+world_sf <- ne_countries(scale = "medium", returnclass = "sf")
+world_sf_modified <- world_sf
+
+world_sf_modified$admin <- sub("The Bahamas", "Bahamas", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Ivory Coast", "Cote d'Ivoire", world_sf_modified$admin)
+world_sf_modified$admin <- sub("Democratic Republic of the Congo", "Congo (Kinshasa)", world_sf_modified$admin)
+world_sf_modified$admin <- sub("Republic of Congo", "Congo (Brazzaville)", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Cape Verde", "Cabo Verde", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Federal States of Micronesia", "Micronesia", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Gambia", "The Gambia", world_sf_modified$admin)
+world_sf_modified$admin <- sub("Guinea Bissau", "Guinea-Bissau", world_sf_modified$admin)
+world_sf_modified$admin <- sub("Hong Kong S.A.R.", "Hong Kong", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Saint Kitts and Nevis", "St. Kitts and Nevis", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("St. Lucia", "Saint Lucia", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Macedonia", "North Macedonia", world_sf_modified$admin)
+world_sf_modified$admin <- sub("Palestine", "Palestinian Authority Administered Territories", world_sf_modified$admin) 
+world_sf_modified$admin <- sub(" Puerto Rico", "Puerto Rico", world_sf_modified$admin)
+world_sf_modified$admin <- sub("Serbia", "Serbia", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Swaziland", "Eswatini", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("East Timor", "Timor-Leste", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("United Republic of Tanzania", "Tanzania", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("United States of America", "United States", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Saint Vincent and the Grenadines", "St. Vincent and the Grenadines", world_sf_modified$admin) 
+world_sf_modified$admin <- sub("Republic of Serbia", "Serbia", world_sf_modified$admin)
+
+```
+
+### Filter out countries/territories that reside in one set and not the other
+
+There were also countries that had boarder changes, disputes, and regime and name changes. Some were also listed in one data set, the Freedom House data, and not in the rnaturalearth dataset or vice versa. These countries needed to be changed or taken out in order for the code to work.The removed countries are stored in a table below. 
+
+```{r, echo=TRUE, results='hide'}
+# Filter FH data for the year 2023
+FH_data_2023 <- FH_data %>%
+  filter(Year == 2023)
+
+# Find countries in FH data for 2023 but not in world_sf
+missing_countries_FH_data_2023 <-
+  setdiff(FH_data$Country, world_sf_modified$admin)
+print(missing_countries_FH_data_2023)
+
+# List of countries to remove from world_sf
+countries_to_remove1 <- c(
+  "Aruba",
+  "Anguilla",
+  "Aland",
+  "American Samoa",
+  "Antarctica",
+  "Ashmore and Cartier Islands",
+  "French Southern and Antarctic Lands",
+  "Saint Barthelemy",
+  "Bermuda",
+  "Cook Islands",
+  "Curaçao",
+  "Cayman Islands",
+  "Falkland Islands",
+  "Faroe Islands",
+  "Federated States of Micronesia",
+  "Guernsey",
+  "Greenland",
+  "Guam",
+  "Heard Island and McDonald Islands",
+  "Isle of Man",
+  "Indian Ocean Territories",
+  "British Indian Ocean Territory",
+  "Jersey",
+  "Siachen Glacier",
+  "Saint Lucia",
+  "Macao S.A.R",
+  "Saint Martin",
+  "Northern Mariana Islands",
+  "Montserrat",
+  "New Caledonia",
+  "Norfolk Island",
+  "Niue",
+  "Pitcairn Islands",
+  "Puerto Rico",
+  "Palestinian Authority Administered Territories",
+  "French Polynesia",
+  "South Georgia and South Sandwich Islands",
+  "Saint Helena",
+  "Saint Pierre and Miquelon",
+  "Sint Maarten",
+  "Turks and Caicos Islands",
+  "Vatican",
+  "British Virgin Islands",
+  "United States Virgin Islands",
+  "Wallis and Futuna"
+)
+
+# Keep only the rows with the specified countries in world_sf
+filtered_world_sf_modified <- world_sf_modified %>%
+  filter(!admin %in% countries_to_remove1)
+
+# List of countries to keep from FH data
+countries_to_remove <- c(
+  "Abkhazia",
+  "Crimea",
+  "Eastern Donbas",
+  "Gaza Strip",
+  "Indian Kashmir",
+  "Micronesia",
+  "Nagorno-Karabakh",
+  "Pakistani Kashmir",
+  "South Ossetia",
+  "St. Lucia",
+  "Tibet",
+  "Transnistria",
+  "Tuvalu",
+  "West Bank"
+)
+
+# Keep only the rows with the specified countries in FH data
+filtered_fh_2023 <- FH_data_2023 %>%
+  filter(!Country %in% countries_to_remove)
+
+# Arrange both data sets so they line up
+arrange(filtered_world_sf_modified)
+arrange(filtered_fh_2023)
+
+# Rename column for world
+names(filtered_fh_2023)[1] <- "admin"
+
+# Merge FH data with world_sf to give every country the same location
+mergeset <- merge(filtered_fh_2023, filtered_world_sf_modified)
+mergeset <- mergeset[1:(195), ]
+
+# List of countries to remove from FH data for the final set
+countries_to_remove <- c(
+  "Abkhazia",
+  "Crimea",
+  "Eastern Donbas",
+  "Gaza Strip",
+  "Indian Kashmir",
+  "Micronesia",
+  "Nagorno-Karabakh",
+  "Pakistani Kashmir",
+  "South Ossetia",
+  "St. Lucia",
+  "Tibet",
+  "Transnistria",
+  "Tuvalu",
+  "West Bank",
+  "Puerto Rico",
+  "Palestinian Authority Administered Territories",
+  "Chechnya",
+  "Israeli Occupied Territories"
+)
+
+# Keep only the rows with the specified countries in the final FH data set
+FH_final_set <- FH_data %>%
+  filter(!Country %in% countries_to_remove)
+
+# Replace "Serbia and Montenegro" with "Serbia" and add Montenegro data for 2006
+FH_final_set$Country <-
+  sub("Serbia and Montenegro", "Serbia", FH_final_set$Country)
+Montenegro_2006 <- FH_final_set[3456, ]
+Montenegro_2006$Country <- "Montenegro"
+FH_final_set2 <- bind_rows(FH_final_set, Montenegro_2006)
+
+# Merge final FH data set with world_sf to have consistent location data for every year
+names(FH_final_set2)[1] <- "admin"
+mergedset2 <- merge(FH_final_set2, filtered_world_sf_modified)
+
+```
+
+
+```{r}
+print(c(countries_to_remove, countries_to_remove1))
+```
+
+
+### Merge Freedom House Data with Map Data
+
+The map graphing data set and the Freedom House data set with the modified names were merged together. After the data was merged, ggplot was used to graph a model where different colors were overlaid on different countries according to their democracy values. There were also issues with country names and borders since countries have been established, and absorbed, and others have had their borders redrawn or split into other territories.
+
+We then merged the Freedom House Data set with the Map Data to make one dataset with the intention of being able to animate it using the gganimate package. 
+
+```{r, echo=TRUE, results='hide'}
+# Filter
+FH_data_2023 <- FH_data %>%
+  filter(Year == 2023)
+
+# Merge with world map data using "Country" as the key
+merged_data <-
+  merge(
+    world_sf,
+    FH_data_2023,
+    by.x = "iso_a3",
+    by.y = "Country",
+    all.x = TRUE
+  )
+
+#Mutate data set and add "totals"
+
+world_sf <- world_sf[, order(names(world_sf))]
+FH_data_2023 <- FH_data_2023[, order(names(FH_data_2023))]
+
+# Find countries in df1 but not in df2
+# Find countries in df1 but not in df2
+missing_countries_world_sf <-
+  setdiff(world_sf_modified$admin, FH_data_2023$Country)
+#print(missing_countries_world_sf)
+
+missing_countries_world_sf2 <-
+  setdiff(world_sf_modified$admin, FH_data_2023$Country)
+#print(missing_countries_world_sf2)
+
+#Filter the countries out of world_sf
+world_sf %>%
+  filter(admin != missing_countries_world_sf)
+#print(" ")
+
+```
+
+
+### Trial of World Map
+
+To test if the merged data set worked, a trial graphic of the world was created. It was then altered to create the series of pngs that eventually turned into the keystone graphic. One of the major changes that occurred was a change in color palette. "Greys" was eventually choosen over "Spectral" so that it is easier to visualize for everyone, including people with color blindness or issues differentiating between colors. The background was also changed so the grid lines were not visible on the final graphic
+
+```{r}
+ggplot() +
+  geom_sf(data = mergeset, aes(fill = Total, geometry = geometry)) +
+  scale_fill_distiller(palette = "Spectral", name = "Value", limits = c(0, 100)) +
+  ggtitle("Democracy by Country in 2023")
+```
+
+
+### Turn World Democracy Maps into png files for the Keystone Graphic
+
+When attempting to animate the plots using gganimate, rstudio kept sent out an error message about the CRF (Coordinate Reference). Re-configuring the code did not work, so gganimate was replaced with plotly, another animation package. Plotly generated a neat graphic, but there was no clear way to add the animation and key that would show the plots over the years and show what colors corresponded with what democracy values. In the end, the solution ended up being to use a gif instead. The plots were coded into r in a way that generated a png of each plot and animate them into a gif using external software (in this case ezgif.com). The plots were then uploaded them onto the gif creation website and saved the file so it could be added into the r markdown document.
+
+```{r}
+year_range <- 2006:2023
+
+# Generate a list of ggplot objects for each year
+plot_list <- lapply(year_range, function(YEAR) {
+  mergedset2 %>%
+    filter(Year == YEAR) %>%
+  ggplot() +
+  geom_sf(aes(fill = Total, geometry = geometry)) +
+  scale_fill_distiller(palette = "Spectral",
+                       name = "Total",
+                       limits = c(0, 100)) +
+  theme(panel.grid = element_blank()) + 
+    ggtitle(paste("Global Democracy", YEAR))
+})
+
+# Create a directory to store the PNG files
+dir.create("output_plots", showWarnings = FALSE)
+
+# Iterate over each plot in plot_list
+for (i in seq_along(plot_list)) {
+  YEAR <- year_range[i]
+  plot_object <- plot_list[[i]]
+  
+  # Save the plot as a PNG file
+  ggsave(paste0("output_plots/global_democracy_", YEAR, ".png"), plot_object,
+         width = 8, height = 6, dpi = 300)
+}
+
+```
+
+ 
+# Results
+
+### Rate of change visualized
+
+In addition to the keystone graphic that displays changes in total score over the years a static graphic to show the overall change from 2006 to 2023 was generated to show the overall rise or decline in democracy for each country over the 18 year period. 
+
+Note: Countries that were taken out of the data set appear white on the graph because the values are n/a. Two main examples are South Sudan and Kosovo.
+
+```{r}
+changeset <- mergedset2 %>%
+  filter(!admin %in% c("South Sudan", "Somaliland", "Kosovo")) %>%
+  filter(Year %in% c(2006, 2023)) %>%
+  arrange(admin, Year) %>%
+  group_by(admin) %>%
+  summarize(change = diff(Total))
+
+world2023mod <- mergedset2 %>%
+  filter(!admin %in% c("South Sudan", "Somaliland", "Kosovo")) %>%
+  filter(Year == 2023)
+
+merge(changeset, world2023mod) %>%
+  ggplot() +
+  geom_sf(aes(fill = change, geometry = geometry)) +
+  scale_fill_distiller(palette = "Spectral",
+                       name = "Change",
+                       limits = c(-50, 50)) +
+  theme(panel.grid = element_blank()) +
+  ggtitle(paste("Change in Democracy score from 2006-2023"))
+```
+
+### Global Change Since 2006
+
+An additional graphic of the total average global democracy score over the 18 years was also produced to focus on the big picture and not just individual countries. Over the 18 year period, total democracy score decreased by almost 5 points on average across all the countries in the world.
+
+```{r}
+mergedset2 %>%
+  group_by(Year) %>%
+  summarize(avg_total = mean(Total)) %>%
+  arrange(Year) %>%
+  mutate(change_from_2006 = avg_total - avg_total[Year == 2006]) %>%
+  ggplot() +
+  geom_line(aes(x = Year, y = change_from_2006)) +
+  ylab("Change from 2006")
+
+```
+
+### Regional Trends
+
+To study regional differences, countries were split based on their region classification from the original Freedom House data set. Average democracy totals over the 18 year time period were graphed for Africa, the Americas, Asia, Eurasia, Europe, and the Middle East.
+
+The Americas, Africa, and the Middle-East have the most significant decreases in democracy total. These regions seem to have decreasing democracy totals as a result of outlier countries rather than general trends among the countries.
+
+```{r}
+mergedset2 %>%
+  arrange(Region, Year) %>%
+  group_by(Region, Year) %>%
+  summarize(region_score = mean(Total)) %>%
+  ggplot() + geom_line(aes(x = Year, y = region_score, color = Region)) +
+  scale_y_continuous(limits = c(0, 100))
+```
+
+### Top Countries With The Most Backsliding
+
+A table listing 10 countries with the most democratic backsliding was generated to highlight which countries are declining the most. The top three, Mali, Nicaragua, and Venezuela were isolated and studied more intensely below.
+
+```{r}
+changeset %>%
+  arrange(change) %>%
+  head(n = 10)
+```
+
+
+### Case Study: Mali
+
+Mali is a state in western Africa, with one third of its territory being covered by the Sahara desert and its population center being along the Niger river. The state first experimented with democracy following the “African Spring of 1990-1991” (Whiteman). Currently the country struggles with never-ending military Coups, and a growing ambivalence/reluctance towards democracy (Whiteman).  The sharp decline of Mali’s democracy score in 2011 can be attributed to Captain Sangopo’s coup. The following dip in 2012 results from the Tuareg rebellion, where the northern half of the country attempted to gain independence. The subsequent emergence of Mai’s democracy score is attributed to a French intervention in 2014 known as “Operation Serval” (Whiteman), which restored order to Mali temporarily. The falling democracy scores in 2020-2023 result from further military coups that have eroded the legitimacy of the democratic process within Mali (The Africa Center for Strategic Studies).
+
+```{r}
+mergedset2 %>%
+  filter(admin == "Mali") %>%
+  arrange(Year) %>%
+  mutate(change_from_2006 = Total - Total[Year == 2006]) %>%
+  ggplot() +
+  geom_line(aes(x = Year, y = change_from_2006)) +
+  ylab("Change from 2006")
+
+```
+
+
+### Case Study: Nicaragua
+
+Democracy in Nicaragua was established first in 1979-1990 by President Daniel Ortega, when his FSLN party ousted the dictatorship of Anastasio Somoza (Stuenkel). Following a civil war, and loss of power, Ortega made “improbable comeback”, gradually dismantling the Nicaraguan democracy ever since (Stuenkel). Ortega’s regime has maintained a steady growth rate of 5% per year and attracts Foreign Direct Investment due to the country’s renewed stability, despite being in one of the most tumultuous regions of the world (Stuenkel). 
+
+
+```{r}
+mergedset2 %>%
+  filter(admin == "Nicaragua") %>%
+  arrange(Year) %>%
+  mutate(change_from_2006 = Total - Total[Year == 2006]) %>%
+  ggplot() +
+  geom_line(aes(x = Year, y = change_from_2006)) +
+  ylab("Change from 2006")
+```
+
+
+### Case Study: Venezuela 
+
+Hugo Chavez systematically dismantled Venezuelan democracy from 1999-2013 via his populist authoritarian tendencies (Seelke). His successor, Nicholas Maduro, has continued the process from a partial democracy to an authoritarian state (Seelke). Opposition leaders attempted to challenge Maduro’s hold over the state, however this has ultimately failed, leading to numerous foreign governments not recognizing and sanctioning the Venezuelan state, harming its oil industry and leaving millions food insecure, precipitating the  collapse of civil liberties/democracy within the Venezuelan state (Seelke). 
+
+
+```{r}
+mergedset2 %>%
+  filter(admin == "Venezuela") %>%
+  arrange(Year) %>%
+  mutate(change_from_2006 = Total - Total[Year == 2006]) %>%
+  ggplot() +
+  geom_line(aes(x = Year, y = change_from_2006)) +
+  ylab("Change from 2006")
+
+```
+
+### Post Soviet States
+
+Post Soviet states have a higher change in democracy totals than the global average, with post soviet states having an average eight point reduction in score since 2006, three points higher than the world average.
+
+```{r}
+mergedset2 %>%
+  filter(
+    admin %in% c(
+      "Russia",
+      "Poland",
+      "Ukraine",
+      "Belarus",
+      "Latvia",
+      "Estonia",
+      "Lithuania",
+      "Kazakhstan",
+      "Kyrgyzstan",
+      "Tajikistan",
+      "Armenia",
+      "Azerbaijan",
+      "Gerogia",
+      "Moldava",
+      "Mongolia",
+      "Uzbekistan"
+    )
+  ) %>%
+  group_by(Year) %>%
+  summarize(avg_total = mean(Total)) %>%
+  arrange(Year) %>%
+  mutate(change_from_2006 = avg_total - avg_total[Year == 2006]) %>%
+  ggplot() +
+  geom_line(aes(x = Year, y = change_from_2006)) +
+  ylab("Change from 2006")
+```
+
+
+# Conclusion
+
+The data collected and utilized in our graphs looks at the democratic totals in 195 different countries/territories over an 18 year period. The data reveals that the world's total democratic average is dropping, with the period from 2006 to 2023 having a five point drop in democratic total values. In sum, the world is becoming less democratic as a whole. From a regional standpoint, there is no obvious front runner, however the Americas, Middle-East, and Africa seem to be decreasing in democratic totals faster than Europe and Asia. Ultimately the trend between region and democratic backsliding seems to be non-existent or slim at best. Finally, there are clear front runners in countries experiencing the most democratic backsliding. Mali's score dropped 45 points, nine times the global average. Other states including Nicaragua, Venezuela, Central African Republic, Thailand, Burundi, Turkey, Afghanistan, Hungary, and Hong Kong have scores that decreased by 25 or more points over the 18 year period. These countries all experienced democratic backsliding in a variety of different ways. For Mali and Afghanistan, failed foreign interventions and regime changes account for the change. In Hong Kong, increasing control from mainland China caused the democratic slide. Finally, in the majority of these countries, the democratic systems were gradually nullified through the unraveling of their institutions. 
+
+
+# Citations
+
+“About Us.” Freedom House, freedomhouse.org/about-us. Accessed 18 Dec. 2023.
+
+The Africa Center for Strategic Studies. “The Legacy of Military Governance in Mali.”  Africa Center for Strategic Studies, 7 Sept. 2023, africacenter.org/spotlight/legacy-military-governance-mali/.
+
+Camara, Kamissa. “Mali Is Becoming a Failed State and It Is Not the Jihadists’ Fault - Africa Research Institute.” Africa Research Institute - Building on the Dynamism in Africa Today, 27 Feb. 2022, www.africaresearchinstitute.org/newsite/blog/mali-becoming-failed-state-not-jihadists-fault/.
+
+“Freedom in the World.” Freedom House, freedomhouse.org/report/freedom-world. Accessed 18 Dec. 2023.
+
+“Our History.” Freedom House, freedomhouse.org/about-us/our-history. Accessed 18 Dec. 2023. 
+
+Seelke, Clare Rebando. “Venezuela: Political Crisis and U.S. Policy .” Congress Research Service, 1 Sept. 2023, crsreports.congress.gov/product/pdf/IF/IF10230.
+
+Stuenkel, Oliver Della Costa, and Andreas E. Feldmann. The Unchecked Demise of Nicaraguan Democracy - Carnegie Endowment For ..., 16 Nov. 2017, carnegieendowment.org/2017/11/16/unchecked-demise-of-nicaraguan-democracy-pub-74761.
+
+Whiteman, Kaye. “Backgrounder: Mali’s Struggle for Democracy.” Al Jazeera, Al Jazeera, 28 July 2013, www.aljazeera.com/features/2013/7/28/backgrounder-malis-struggle-for-democracy. 
+
+
+
