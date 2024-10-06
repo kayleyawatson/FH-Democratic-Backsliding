@@ -323,7 +323,7 @@ world_sf %>%
 
 ### Trial of World Map
 
-To test if the merged data set worked, a trial graphic of the world was created. It was then altered to create the series of pngs that eventually turned into the keystone graphic. One of the major changes that occurred was a change in color palette. "Greys" was eventually choosen over "Spectral" so that it is easier to visualize for everyone, including people with color blindness or issues differentiating between colors. The background was also changed so the grid lines were not visible on the final graphic
+To test if the merged data set worked, a trial graphic of the world was created. It was then altered to create the series of pngs that eventually turned into the keystone graphic. 
 
 ```{r}
 ggplot() +
